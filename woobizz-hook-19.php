@@ -2,10 +2,10 @@
 /*
 Plugin Name: Woobizz Hook 19 
 Plugin URI: http://woobizz.com
-Description: Show thumbnail image on checkout page
+Description: Use order number as invoice number
 Author: Woobizz
 Author URI: http://woobizz.com
-Version: 1.0.0
+Version: 1.0.1
 Text Domain: woobizzhook19
 Domain Path: /lang/
 */
@@ -25,15 +25,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	//echo "woocommerce is not active";
 	add_action( 'admin_notices', 'woobizzhook19_admin_notice' );
 }
-//Hook19 Function
-function woobizzhook19_add_checkout_thumbnail() {
-	global $woocommerce;
-	if (is_checkout()){
-		echo "<style>.woobizz-checkout-thumbnail{display:block!important;}</style>";
-	}else{
-	//Do nothing
-	}
-}
 //Hook19 Notice
 function woobizzhook19_admin_notice() {
     ?>
@@ -41,4 +32,9 @@ function woobizzhook19_admin_notice() {
         <p><?php _e( 'Woobizz Hook 19 needs WooCommerce to work properly, If you do not use this plugin you can disable it!', 'woobizzhook19' ); ?></p>
     </div>
     <?php
+}
+//Hook19 Function
+add_filter( 'wpo_wcpdf_invoice_number', 'wpo_wcpdf_format_invoice_number', 20, 4 );
+function wpo_wcpdf_format_invoice_number( $invoice_number, $order_number, $order_id, $order_date ) {
+    return $order_number;
 }
